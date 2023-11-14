@@ -1,0 +1,5 @@
+output.json
+.idea/*
+bin/kubazulo
+.DS_Store
+bin/*
