@@ -97,7 +97,7 @@ func startLocalListener(c AuthorizationConfig, token *AuthorizationCode) *http.S
 			}
 		}
 
-		fmt.Fprintf(w, SuccessMsg)
+		fmt.Fprintf(w, "%s", SuccessMsg)
 		//fmt.Fprintf(w, "Auth done, you can close this window")
 	})
 
