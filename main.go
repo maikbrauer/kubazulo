@@ -70,6 +70,8 @@ func main() {
 		_force_login string
 	)
 
+	kubazulo.InfoLogger.Println("Application invoked")
+
 	flag.StringVar(&_client_id, "client-id", "", "client-id missing")
 	flag.StringVar(&_tenant_id, "tenant-id", "", "tenant-id missing")
 	flag.StringVar(&_force_login, "force-login", "false", "force-login is missing")
@@ -78,6 +80,7 @@ func main() {
 
 	if _client_id == "" || _tenant_id == "" {
 		fmt.Println("ERROR: Command can't be executed! \nMissing Mandatory Parameters: (client-id) and (tenant-id)")
+		kubazulo.ErrorLogger.Println("Program exited. Mandatory Parameters missing")
 		os.Exit(2)
 	}
 
@@ -86,26 +89,23 @@ func main() {
 	kubazulo.Cfg_force_login = _force_login
 	kubazulo.FillVariables()
 
-	home, err := os.UserHomeDir()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	if _, err := os.Stat(home + "/.kube/cache/kubazulo/azuredata.json"); errors.Is(err, os.ErrNotExist) {
+	if _, err := os.Stat(kubazulo.GetHomeDir() + "/.kube/cache/kubazulo/azuredata.json"); errors.Is(err, os.ErrNotExist) {
+		kubazulo.InfoLogger.Println("Cache File does not exist. New AccessToken obtained from Azure-API")
 		createNewToken()
 	} else {
 		r := kubazulo.ReadSession()
 		_r = r
 		if time.Now().Unix() >= _r.ExpirationTimestamp {
-			createNewToken()
-		} else if time.Now().Unix() <= _r.ExpirationTimestamp && r.RefreshToken != "" {
+			kubazulo.InfoLogger.Println("Cache File exist but AccessToken is expired. New AccessToken obtained from Azure-API via Refreshtoken")
 			t, err := kubazulo.RenewAccessToken(_r.RefreshToken)
 			if err != nil {
 				log.Fatal(err)
 			}
 			kubeoutput(t.AccessToken)
 			kubazulo.WriteSession(kubazulo.GetExpiryUnixTime(int64(t.Expiry)), kubazulo.GetCurrentUnixTime(), t.AccessToken, t.RefreshToken)
+			kubazulo.InfoLogger.Println("Cache File updated with the latest information from Azure-API")
 		} else {
+			kubazulo.InfoLogger.Println("Cache File exist. AccessToken taken from cache file")
 			kubeoutput(r.AccessToken)
 		}
 	}
