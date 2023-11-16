@@ -1,5 +1,7 @@
+<img src="https://github.com/maikbrauer/kubazulo/assets/53018978/9a6f35a3-e233-4b07-93cd-76bc560489b4" width="64" />
+
 # kubazulo
-Kubeconfig Authentication Helper for Kubernetes API-Server
+Kubeconfig Authentication Helper for Kubernetes API-Server in cunjunction with kubectl
 
 ## Description
 kubazulo is a client-go credential (exec) plugin implementing azure authentication. It plugs in seemless into the process of communicating to the kubernetes API-Server.
@@ -34,6 +36,10 @@ kubectl config set-credentials "kubazulo-azuread" \
 ```
 
 4. Use this credential to connect to the cluster:
+
+## References
+### kubectl Command Installation
+https://kubernetes.io/docs/tasks/tools/
 
 ```
 kubectl config set-context "$CLUSTER_NAME" --cluster="$CLUSTER_NAME" --user=kubazulo-azuread
