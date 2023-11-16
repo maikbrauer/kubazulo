@@ -40,13 +40,13 @@ jobs:
         with:
           go-version: '1.21'
       - name: Build
-        run: go build -v -o . ./...
+        run: go build -v -o kubazulo
       - name: Test
         run: go test -v ./...
       - name: create zip
         uses: vimtor/action-zip@v1.1
         with:
-          files: main
+          files: kubazulo
           dest: kubazulo-${{ matrix.os }}-amd64-${{ github.ref_name }}.zip
       - name: Upload Release Asset
         id: upload-release-asset
