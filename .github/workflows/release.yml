@@ -46,7 +46,7 @@ jobs:
       - name: create zip
         uses: vimtor/action-zip@v1.1
         with:
-          files: kubazulo-${{ matrix.os }}-amd64-${{ github.ref_name }}
+          files: main
           dest: kubazulo-${{ matrix.os }}-amd64-${{ github.ref_name }}.zip
       - name: Upload Release Asset
         id: upload-release-asset
