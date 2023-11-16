@@ -37,6 +37,11 @@ kubectl config set-credentials "kubazulo-azuread" \
 
 4. Use this credential to connect to the cluster:
 
+## Logging
+
+kubazulo will also log the operations it is doing to the following folder
+`$HOME/.kube/kubazulo/application.log`
+
 ## References
 ### kubectl Command Installation
 https://kubernetes.io/docs/tasks/tools/
