@@ -1,32 +1,41 @@
 # kubazulo
 Kubeconfig Authentication Helper for Kubernetes API-Server
 
-## Configure kubeconfig
+## Description
+kubazulo is a client-go credential (exec) plugin implementing azure authentication. It plugs in seemless into the process of communicating to the kubernetes API-Server.
 
-This is a sample configuration.
+For this the kubeconfig needs to be adapted.
 
-Please export the new file for `KUBECONFIG` variable:
->export KUBECONFIG=$HOME/.kube/kubazulo.config
+## Setup the k8s OIDC Provider 
 
-Then copy the configuration below into the kubeconfig file:
+kubazulo can be used to authenticate to general kubernetes clusters using Azure Active Directory as an OIDC provider.
+
+1. Create an AAD Enterprise Application and the corresponding App Registration. Check the Allow public client flows checkbox. Configure groups to be included in the response. Take a note of the directory (tenant) ID as $AAD_TENANT_ID and the application (client) ID as $AAD_CLIENT_ID
+
+2. Configure the API server with the following flags:
+
+* Issuer URL: --oidc-issuer-url=https://sts.windows.net/$AAD_TENANT_ID/
+* Client ID: --oidc-client-id=$AAD_CLIENT_ID
+* Username claim: --oidc-username-claim=upn
+* Group claim --oidc-groups-claim=groups
+
+>See the [kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/authentication/#configuring-the-api-server) docs for optional flags.
+
+3. Configure the Exec plugin with kubelogin to use the application from the first step:
+
+```
+kubectl config set-credentials "kubazulo-azuread" \
+  --exec-api-version=client.authentication.k8s.io/v1beta1 \
+  --exec-command=kubelogin \
+  --exec-arg=--client-id \
+  --exec-arg=$AAD_CLIENT_ID \
+  --exec-arg=--tenant-id \
+  --exec-arg=$AAD_TENANT_ID
 ```
 
-users:
-- name: kubazulo-azuread
-  user:
-    exec:
-      apiVersion: client.authentication.k8s.io/v1beta1
-      args:
-      - --client-id
-      - {{ YOUR_CLIENT_ID }}
-      - --tenant-id
-      - {{ YOUR_TENANT_ID}}
-      - --force-login
-      - {{ false || true}}
-      command: kubazulo
-      env: null
-      interactiveMode: IfAvailable
-      provideClusterInfo: false
+4. Use this credential to connect to the cluster:
+
 ```
-
-
+kubectl config set-context "$CLUSTER_NAME" --cluster="$CLUSTER_NAME" --user=kubazulo-azuread
+kubectl config use-context "$CLUSTER_NAME"
+```
