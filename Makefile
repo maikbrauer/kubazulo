@@ -1,7 +1,7 @@
 default: help
 
 build:
-	go build -v -o bin/kubazulo .
+	go build -v -o . ./...
 
 test:
 	go test -v ./...
