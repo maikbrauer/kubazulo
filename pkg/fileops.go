@@ -9,21 +9,19 @@ import (
 	"github.com/pkg/errors"
 )
 
-func WriteSession(Expiry int64, TokenStart int64, _AccessToken string, _RefreshToken string) {
-	home, err := os.UserHomeDir()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	path := home + "/.kube/cache/kubazulo"
+func createDirectory(path string) {
 	if _, err := os.Stat(path); errors.Is(err, os.ErrNotExist) {
-		err := os.Mkdir(path, os.ModePerm)
+		err := os.MkdirAll(path, os.ModePerm)
 		if err != nil {
 			log.Println(err)
 		}
 	}
+}
 
-	f, err := os.Create(home + "/.kube/cache/kubazulo/azuredata.json")
+func WriteSession(Expiry int64, TokenStart int64, _AccessToken string, _RefreshToken string) {
+	path := "/.kube/cache/kubazulo"
+	createDirectory(GetHomeDir() + path)
+	f, err := os.Create(GetHomeDir() + path + "azuredata.json")
 	if err != nil {
 		panic(err)
 	}
@@ -44,13 +42,7 @@ func WriteSession(Expiry int64, TokenStart int64, _AccessToken string, _RefreshT
 }
 
 func ReadSession() Session {
-	home, err := os.UserHomeDir()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	fileContent, err := os.Open(home + "/.kube/cache/kubazulo/azuredata.json")
-
+	fileContent, err := os.Open(GetHomeDir() + "/.kube/cache/kubazulo/azuredata.json")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -58,10 +50,7 @@ func ReadSession() Session {
 	defer fileContent.Close()
 
 	byteResult, _ := ioutil.ReadAll(fileContent)
-
 	data := Session{}
-
 	err = json.Unmarshal([]byte(byteResult), &data)
-
 	return data
 }

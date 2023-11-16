@@ -1,7 +1,6 @@
 package kubazulo
 
 import (
-	"errors"
 	"log"
 	"os"
 )
@@ -38,14 +37,9 @@ func FillVariables() {
 }
 
 func init() {
-	var logpath string = GetHomeDir() + "/.kube/kubazulo/"
+	var logpath string = GetHomeDir() + "/.kube/kubazulo/maik/"
 
-	if _, err := os.Stat(logpath); errors.Is(err, os.ErrNotExist) {
-		err := os.Mkdir(logpath, os.ModePerm)
-		if err != nil {
-			log.Println(err)
-		}
-	}
+	createDirectory(logpath)
 
 	file, err := os.OpenFile(logpath+"application.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
 	if err != nil {
