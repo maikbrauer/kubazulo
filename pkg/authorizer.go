@@ -15,7 +15,7 @@ type AuthorizationConfig struct {
 }
 
 var DefaultConfig = AuthorizationConfig{
-	RedirectPort: "8080",
+	RedirectPort: string(Cfg_loopbackport),
 	RedirectPath: "/",
 	Scope:        "openid profile offline_access user.read",
 	OpenCMD:      "open",

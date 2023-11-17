@@ -6,9 +6,10 @@ import (
 )
 
 var (
-	Cfg_client_id   string
-	Cfg_tenant_id   string
-	Cfg_force_login string
+	Cfg_client_id    string
+	Cfg_tenant_id    string
+	Cfg_force_login  string
+	Cfg_loopbackport string
 )
 
 var (
