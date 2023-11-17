@@ -6,6 +6,8 @@ import (
 )
 
 type AuthorizationConfig struct {
+	Host         string
+	Scheme       string
 	RedirectPort string
 	RedirectPath string
 	Scope        string
@@ -15,7 +17,8 @@ type AuthorizationConfig struct {
 }
 
 var DefaultConfig = AuthorizationConfig{
-	RedirectPort: "8080",
+	Host:         "localhost",
+	Scheme:       "http",
 	RedirectPath: "/",
 	Scope:        "openid profile offline_access user.read",
 	OpenCMD:      "open",
@@ -23,13 +26,13 @@ var DefaultConfig = AuthorizationConfig{
 
 // RedirectURL
 func (c AuthorizationConfig) RedirectURL() string {
-	host := "localhost"
 	if c.RedirectPort != "" {
-		host = fmt.Sprintf("%s:%s", host, c.RedirectPort)
+		c.Host = fmt.Sprintf("%s:%s", c.Host, c.RedirectPort)
 	}
+
 	uri := url.URL{
-		Host:   host,
-		Scheme: "http",
+		Host:   c.Host,
+		Scheme: c.Scheme,
 		Path:   c.RedirectPath,
 	}
 

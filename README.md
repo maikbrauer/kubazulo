@@ -37,6 +37,15 @@ kubectl config set-credentials "kubazulo-azuread" \
 
 4. Use this credential to connect to the cluster:
 
+## Command Arguments
+
+| Parameter | Description | Mandatory | Default |
+|-----------|-------------|:---------:|---------|
+| --client-id | Azure Application-ID |:heavy_check_mark: | n/a|
+| --tenant-id | Azure Tenant-ID |:heavy_check_mark: |n/a|
+| --force-login | Re-Usage of Brwoser Session data |:x: |false |
+| --loopbackport | Customize local callback listener |:x: | 58433|
+
 ## Logging
 
 kubazulo will also log the operations it is doing to the following folder

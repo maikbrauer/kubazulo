@@ -49,6 +49,7 @@ func createNewToken() {
 	authConfig := kubazulo.DefaultConfig
 	// client id from your setup
 	authConfig.ClientID = kubazulo.Cfg_client_id
+	authConfig.RedirectPort = kubazulo.Cfg_loopbackport
 	// client secret from your setup
 	//authConfig.ClientSecret = x.ClientSecret
 
@@ -65,9 +66,10 @@ func createNewToken() {
 func main() {
 	var _r kubazulo.Session
 	var (
-		_client_id   string
-		_tenant_id   string
-		_force_login string
+		_client_id    string
+		_tenant_id    string
+		_force_login  string
+		_loopbackport string
 	)
 
 	kubazulo.InfoLogger.Println("Application invoked")
@@ -75,11 +77,13 @@ func main() {
 	flag.StringVar(&_client_id, "client-id", "", "client-id missing")
 	flag.StringVar(&_tenant_id, "tenant-id", "", "tenant-id missing")
 	flag.StringVar(&_force_login, "force-login", "false", "force-login is missing")
+	flag.StringVar(&_loopbackport, "loopbackport", "58433", "loopbackport is missing")
 
 	flag.Parse()
 
 	if _client_id == "" || _tenant_id == "" {
-		fmt.Println("ERROR: Command can't be executed! \nMissing Mandatory Parameters: (client-id) and (tenant-id)")
+		fmt.Println("Kubeconfig Authentication Helper")
+		fmt.Println("Usage: \n\n \t kubazulo <arguments>\n\nThe Arguments are:\n\n\t--client-id\tAzure Application-ID\n\t--tenant-id\tAzure Tenant-ID\n\t--force-login\tRe-Usage of Brwoser Session data\n\t--loopbackport\tCustomize local callback listener")
 		kubazulo.ErrorLogger.Println("Program exited. Mandatory Parameters missing")
 		os.Exit(2)
 	}
@@ -87,6 +91,8 @@ func main() {
 	kubazulo.Cfg_client_id = _client_id
 	kubazulo.Cfg_tenant_id = _tenant_id
 	kubazulo.Cfg_force_login = _force_login
+	kubazulo.Cfg_loopbackport = _loopbackport
+
 	kubazulo.FillVariables()
 
 	if _, err := os.Stat(kubazulo.GetHomeDir() + "/.kube/cache/kubazulo/azuredata.json"); errors.Is(err, os.ErrNotExist) {
