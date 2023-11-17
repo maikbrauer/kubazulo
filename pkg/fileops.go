@@ -2,7 +2,6 @@ package kubazulo
 
 import (
 	"encoding/json"
-	"io/ioutil"
 	"log"
 	"os"
 
@@ -19,7 +18,7 @@ func createDirectory(path string) {
 }
 
 func WriteSession(Expiry int64, TokenStart int64, _AccessToken string, _RefreshToken string) {
-	path := "/.kube/cache/kubazulo"
+	path := "/.kube/cache/kubazulo/"
 	createDirectory(GetHomeDir() + path)
 	f, err := os.Create(GetHomeDir() + path + "azuredata.json")
 	if err != nil {
@@ -42,15 +41,11 @@ func WriteSession(Expiry int64, TokenStart int64, _AccessToken string, _RefreshT
 }
 
 func ReadSession() Session {
-	fileContent, err := os.Open(GetHomeDir() + "/.kube/cache/kubazulo/azuredata.json")
+	data := Session{}
+	fileContent, err := os.ReadFile(GetHomeDir() + "/.kube/cache/kubazulo/azuredata.json")
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	defer fileContent.Close()
-
-	byteResult, _ := ioutil.ReadAll(fileContent)
-	data := Session{}
-	err = json.Unmarshal([]byte(byteResult), &data)
+	json.Unmarshal([]byte(fileContent), &data)
 	return data
 }
