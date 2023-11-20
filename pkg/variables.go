@@ -38,8 +38,7 @@ func FillVariables() {
 }
 
 func init() {
-	var logpath string = GetHomeDir() + "/.kube/kubazulo/maik/"
-
+	var logpath string = GetHomeDir() + "/.kube/kubazulo/"
 	createDirectory(logpath)
 
 	file, err := os.OpenFile(logpath+"application.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
