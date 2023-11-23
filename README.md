@@ -28,7 +28,7 @@ kubazulo can be used to authenticate to general kubernetes clusters using Azure 
 ```
 kubectl config set-credentials "kubazulo-azuread" \
   --exec-api-version=client.authentication.k8s.io/v1beta1 \
-  --exec-command=kubelogin \
+  --exec-command=kubazulo \
   --exec-arg=--client-id \
   --exec-arg=$AAD_CLIENT_ID \
   --exec-arg=--tenant-id \
