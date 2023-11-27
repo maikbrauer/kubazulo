@@ -55,21 +55,38 @@ func createNewToken() {
 
 	// Preform one time login
 	authCode := kubazulo.LoginRequest(authConfig)
-	t, err := kubazulo.GetTokens(authConfig, authCode, "profile openid offline_access")
-	if err != nil {
-		panic(err)
+	if kubazulo.Cfg_intermediate == "true" {
+
+		var data = kubazulo.Jsondata{
+			AuthCode:    authCode.Value,
+			RedirectURI: "http://localhost:" + kubazulo.Cfg_loopbackport,
+		}
+
+		t, err := kubazulo.GetTokenData(data)
+		if err != nil {
+			panic(err)
+		}
+		kubeoutput(t.AccessToken)
+		kubazulo.WriteSession(kubazulo.GetExpiryUnixTime(int64(t.Expiry)), kubazulo.GetCurrentUnixTime(), t.AccessToken, t.RefreshToken)
+	} else {
+		t, err := kubazulo.GetTokens(authConfig, authCode, "profile openid offline_access")
+		if err != nil {
+			panic(err)
+		}
+		kubeoutput(t.AccessToken)
+		kubazulo.WriteSession(kubazulo.GetExpiryUnixTime(int64(t.Expiry)), kubazulo.GetCurrentUnixTime(), t.AccessToken, t.RefreshToken)
 	}
-	kubeoutput(t.AccessToken)
-	kubazulo.WriteSession(kubazulo.GetExpiryUnixTime(int64(t.Expiry)), kubazulo.GetCurrentUnixTime(), t.AccessToken, t.RefreshToken)
 }
 
 func main() {
 	var _r kubazulo.Session
 	var (
-		_client_id    string
-		_tenant_id    string
-		_force_login  string
-		_loopbackport string
+		_client_id        string
+		_tenant_id        string
+		_force_login      string
+		_loopbackport     string
+		_intermediate     string
+		_apitokenendpoint string
 	)
 
 	kubazulo.InfoLogger.Println("Application invoked")
@@ -78,12 +95,14 @@ func main() {
 	flag.StringVar(&_tenant_id, "tenant-id", "", "tenant-id missing")
 	flag.StringVar(&_force_login, "force-login", "false", "force-login is missing")
 	flag.StringVar(&_loopbackport, "loopbackport", "58433", "loopbackport is missing")
+	flag.StringVar(&_intermediate, "intermediate", "false", "intermediate is missing")
+	flag.StringVar(&_apitokenendpoint, "api-token-endpoint", "", "api-token-endpoint is missing")
 
 	flag.Parse()
 
 	if _client_id == "" || _tenant_id == "" {
 		fmt.Println("Kubeconfig Authentication Helper")
-		fmt.Println("Usage: \n\n \t kubazulo <arguments>\n\nThe Arguments are:\n\n\t--client-id\tAzure Application-ID\n\t--tenant-id\tAzure Tenant-ID\n\t--force-login\tRe-Usage of Brwoser Session data\n\t--loopbackport\tCustomize local callback listener")
+		fmt.Print(kubazulo.Usagemsg)
 		kubazulo.ErrorLogger.Println("Program exited. Mandatory Parameters missing")
 		os.Exit(2)
 	}
@@ -92,6 +111,8 @@ func main() {
 	kubazulo.Cfg_tenant_id = _tenant_id
 	kubazulo.Cfg_force_login = _force_login
 	kubazulo.Cfg_loopbackport = _loopbackport
+	kubazulo.Cfg_intermediate = _intermediate
+	kubazulo.Cfg_apitokenendpoint = _apitokenendpoint
 
 	kubazulo.FillVariables()
 
@@ -101,7 +122,10 @@ func main() {
 	} else {
 		r := kubazulo.ReadSession()
 		_r = r
-		if time.Now().Unix() >= _r.ExpirationTimestamp {
+		if _r.AccessToken == "" {
+			kubazulo.InfoLogger.Println("Cache File does not contain an Access-Token. New AccessToken obtained from Azure-API")
+			createNewToken()
+		} else if time.Now().Unix() >= _r.ExpirationTimestamp {
 			kubazulo.InfoLogger.Println("Cache File exist but AccessToken is expired. New AccessToken obtained from Azure-API via Refreshtoken")
 			t, err := kubazulo.RenewAccessToken(_r.RefreshToken)
 			if err != nil {
