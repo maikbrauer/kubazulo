@@ -25,6 +25,8 @@ kubazulo can be used to authenticate to general kubernetes clusters using Azure 
 
 3. Configure the Exec plugin with kubelogin to use the application from the first step:
 
+
+### Configure for Standalone Flow (Default)
 ```
 kubectl config set-credentials "kubazulo-azuread" \
   --exec-api-version=client.authentication.k8s.io/v1beta1 \
@@ -34,6 +36,23 @@ kubectl config set-credentials "kubazulo-azuread" \
   --exec-arg=--tenant-id \
   --exec-arg=$AAD_TENANT_ID
 ```
+
+### Configure for Intermediate Flow (Advanced)
+```
+kubectl config set-credentials "kubazulo-azuread" \
+  --exec-api-version=client.authentication.k8s.io/v1beta1 \
+  --exec-command=kubazulo \
+  --exec-arg=--client-id \
+  --exec-arg=$AAD_CLIENT_ID \
+  --exec-arg=--tenant-id \
+  --exec-arg=$AAD_TENANT_ID
+  --exec-arg=--intermediate \
+  --exec-arg=true
+  --exec-arg=--api-token-endpoint \
+  --exec-arg=$APIGW_ENDPOINT
+```
+>Please DON'T FORGET TO SET THE OS-Environment Variables |
+
 
 4. Use this credential to connect to the cluster:
 
