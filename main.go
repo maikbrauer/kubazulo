@@ -102,7 +102,7 @@ func main() {
 
 	if _client_id == "" || _tenant_id == "" {
 		fmt.Println("Kubeconfig Authentication Helper")
-		fmt.Println("Usage: \n\n \t kubazulo <arguments>\n\nThe Arguments are:\n\n\t--client-id\tAzure Application-ID\n\t--tenant-id\tAzure Tenant-ID\n\t--force-login\tRe-Usage of Brwoser Session data\n\t--loopbackport\tCustomize local callback listener")
+		fmt.Print(kubazulo.Usagemsg)
 		kubazulo.ErrorLogger.Println("Program exited. Mandatory Parameters missing")
 		os.Exit(2)
 	}

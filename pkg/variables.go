@@ -5,6 +5,14 @@ import (
 	"os"
 )
 
+const Usagemsg = "Usage: \n\n\t kubazulo <arguments>\n\nThe Arguments are:\n\n\t" +
+	"--client-id\t\tAzure Application-ID\n\t" +
+	"--tenant-id\t\tAzure Tenant-ID\n\t" +
+	"--force-login\t\tRe-Usage of Brwoser Session data\n\t" +
+	"--loopbackport\t\tCustomize local callback listener\n\t" +
+	"--intermediate\t\tActivate another Token fetcher Endpoint\n\t" +
+	"--api-token-endpoint\tDefine Endpoint from where it gets Token\n\n"
+
 var (
 	Cfg_client_id        string
 	Cfg_tenant_id        string
