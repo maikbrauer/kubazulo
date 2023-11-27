@@ -45,9 +45,9 @@ kubectl config set-credentials "kubazulo-azuread" \
   --exec-arg=--client-id \
   --exec-arg=$AAD_CLIENT_ID \
   --exec-arg=--tenant-id \
-  --exec-arg=$AAD_TENANT_ID
+  --exec-arg=$AAD_TENANT_ID \
   --exec-arg=--intermediate \
-  --exec-arg=true
+  --exec-arg=true \
   --exec-arg=--api-token-endpoint \
   --exec-arg=$APIGW_ENDPOINT
 ```
