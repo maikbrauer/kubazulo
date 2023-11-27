@@ -62,7 +62,7 @@ kubectl config set-credentials "kubazulo-azuread" \
 |-----------|-------------|:---------:|---------|
 | --client-id | Azure Application-ID |:heavy_check_mark: | n/a|
 | --tenant-id | Azure Tenant-ID |:heavy_check_mark: |n/a|
-| --force-login | Re-Usage of Brwoser Session data |:x: |false |
+| --force-login | Re-Usage of Browser Session data |:x: |false |
 | --loopbackport | Customize local callback listener |:x: | 58433|
 | --intermediate | Activate another Token fetcher Endpoint |:x: | false|
 | --api-token-endpoint | Define Endpoint from where it gets Token |:x: | n/a|
