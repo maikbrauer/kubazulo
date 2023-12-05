@@ -1,9 +1,10 @@
-package kubazulo
+package authorization
 
 import (
 	"bytes"
 	"encoding/json"
 	"io/ioutil"
+	"kubazulo/pkg/utils"
 	"log"
 	"net/http"
 	"time"
@@ -22,7 +23,7 @@ func GetTokenData(data Jsondata) (t Tokens, err error) {
 		log.Fatalf("impossible to marshall teacher: %s", err)
 	}
 
-	req, err := http.NewRequest("POST", Cfg_apitokenendpoint, bytes.NewReader(marshalled))
+	req, err := http.NewRequest("POST", utils.Cfg_apitokenendpoint, bytes.NewReader(marshalled))
 	req.Header.Set("Content-Type", "application/json")
 	client := http.Client{Timeout: 10 * time.Second}
 	response, err := client.Do(req)

@@ -1,17 +1,38 @@
-package kubazulo
+package utils
 
 import (
 	"log"
 	"os"
 )
 
-const Usagemsg = "Usage: \n\n\t kubazulo <arguments>\n\nThe Arguments are:\n\n\t" +
+const Usagemsg = "Usage: \n\n\t kubazulo <arguments>" +
+	"Available Commands: --get-token" +
+	"\n\nThe Arguments are:\n\n\t" +
 	"--client-id\t\tAzure Application-ID\n\t" +
 	"--tenant-id\t\tAzure Tenant-ID\n\t" +
 	"--force-login\t\tRe-Usage of Brwoser Session data\n\t" +
 	"--loopbackport\t\tCustomize local callback listener\n\t" +
 	"--intermediate\t\tActivate another Token fetcher Endpoint\n\t" +
 	"--api-token-endpoint\tDefine Endpoint from where it gets Token\n\n"
+
+type AuthorizationConfig struct {
+	Host         string
+	Scheme       string
+	RedirectPort string
+	RedirectPath string
+	Scope        string
+	ClientID     string
+	OpenCMD      string
+	ClientSecret string
+}
+
+var DefaultConfig = AuthorizationConfig{
+	Host:         "localhost",
+	Scheme:       "http",
+	RedirectPath: "/",
+	Scope:        "openid profile offline_access user.read",
+	OpenCMD:      "open",
+}
 
 var (
 	Cfg_client_id        string
@@ -49,7 +70,7 @@ func FillVariables() {
 
 func init() {
 	var logpath string = GetHomeDir() + "/.kube/kubazulo/"
-	createDirectory(logpath)
+	CreateDirectory(logpath)
 
 	file, err := os.OpenFile(logpath+"application.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
 	if err != nil {

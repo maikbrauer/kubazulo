@@ -1,10 +1,11 @@
-package kubazulo
+package authorization
 
 import (
 	"context"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"kubazulo/pkg/utils"
 	"log"
 	"net/http"
 	"net/url"
@@ -51,7 +52,7 @@ type Tokens struct {
 }
 
 // GetTokens retrieves access and refresh tokens for a given scope
-func GetTokens(c AuthorizationConfig, authCode AuthorizationCode, scope string) (t Tokens, err error) {
+func GetTokens(c utils.AuthorizationConfig, authCode AuthorizationCode, scope string) (t Tokens, err error) {
 	formVals := url.Values{}
 	formVals.Set("code", authCode.Value)
 	formVals.Set("grant_type", "authorization_code")
@@ -61,7 +62,7 @@ func GetTokens(c AuthorizationConfig, authCode AuthorizationCode, scope string) 
 		formVals.Set("client_secret", c.ClientSecret)
 	}
 	formVals.Set("client_id", c.ClientID)
-	response, err := http.PostForm(TokenURL, formVals)
+	response, err := http.PostForm(utils.TokenURL, formVals)
 
 	if err != nil {
 		return t, errors.Wrap(err, "error while trying to get tokens")
@@ -82,7 +83,7 @@ func GetTokens(c AuthorizationConfig, authCode AuthorizationCode, scope string) 
 
 // startLocalListener opens a http server to retrieve the redirect from initial
 // authentication and set the authorization code's value
-func startLocalListener(c AuthorizationConfig, token *AuthorizationCode) *http.Server {
+func startLocalListener(c utils.AuthorizationConfig, token *AuthorizationCode) *http.Server {
 	srv := &http.Server{Addr: fmt.Sprintf(":%s", c.RedirectPort)}
 
 	http.HandleFunc(c.RedirectPath, func(w http.ResponseWriter, r *http.Request) {
@@ -115,19 +116,19 @@ func startLocalListener(c AuthorizationConfig, token *AuthorizationCode) *http.S
 // LoginRequest asks the os to open the login URL and starts a listening on the
 // configured port for the authorization code. This is used on initial login to
 // get the initial token pairs
-func LoginRequest(c AuthorizationConfig) (token AuthorizationCode) {
+func LoginRequest(c utils.AuthorizationConfig) (token AuthorizationCode) {
 	formVals := url.Values{}
 	formVals.Set("grant_type", "authorization_code")
 	formVals.Set("redirect_uri", c.RedirectURL())
-	formVals.Set("scope", Cfg_client_id+"/.default")
+	formVals.Set("scope", utils.Cfg_client_id+"/.default")
 	formVals.Set("response_type", "code")
 	formVals.Set("response_mode", "query")
 	formVals.Set("client_id", c.ClientID)
 	formVals.Set("state", "12345")
-	if strings.ToLower(Cfg_force_login) == "true" {
+	if strings.ToLower(utils.Cfg_force_login) == "true" {
 		formVals.Set("prompt", "login")
 	}
-	uri, _ := url.Parse(AuthorizationURL)
+	uri, _ := url.Parse(utils.AuthorizationURL)
 	uri.RawQuery = formVals.Encode()
 
 	cmd := exec.Command(c.OpenCMD, uri.String())
@@ -153,8 +154,8 @@ func RenewAccessToken(refreshToken string) (t Tokens, err error) {
 	formVals := url.Values{}
 	formVals.Set("refresh_token", refreshToken)
 	formVals.Set("grant_type", "refresh_token")
-	formVals.Set("client_id", Cfg_client_id)
-	response, err := http.PostForm(TokenURL, formVals)
+	formVals.Set("client_id", utils.Cfg_client_id)
+	response, err := http.PostForm(utils.TokenURL, formVals)
 
 	if err != nil {
 		return t, errors.Wrap(err, "error while trying to get tokens")

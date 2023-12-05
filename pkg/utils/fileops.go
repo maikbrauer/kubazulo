@@ -1,4 +1,4 @@
-package kubazulo
+package utils
 
 import (
 	"encoding/json"
@@ -8,7 +8,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-func createDirectory(path string) {
+func CreateDirectory(path string) {
 	if _, err := os.Stat(path); errors.Is(err, os.ErrNotExist) {
 		err := os.MkdirAll(path, os.ModePerm)
 		if err != nil {
@@ -19,7 +19,7 @@ func createDirectory(path string) {
 
 func WriteSession(Expiry int64, TokenStart int64, _AccessToken string, _RefreshToken string) {
 	path := "/.kube/cache/kubazulo/"
-	createDirectory(GetHomeDir() + path)
+	CreateDirectory(GetHomeDir() + path)
 	f, err := os.Create(GetHomeDir() + path + "azuredata.json")
 	if err != nil {
 		panic(err)

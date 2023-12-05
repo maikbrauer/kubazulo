@@ -1,7 +1,9 @@
-package kubazulo
+package utils
 
 import (
+	"fmt"
 	"log"
+	"net/url"
 	"os"
 	"time"
 )
@@ -24,4 +26,18 @@ func GetHomeDir() string {
 		log.Fatal(err)
 	}
 	return home
+}
+
+func (c AuthorizationConfig) RedirectURL() string {
+	if c.RedirectPort != "" {
+		c.Host = fmt.Sprintf("%s:%s", c.Host, c.RedirectPort)
+	}
+
+	uri := url.URL{
+		Host:   c.Host,
+		Scheme: c.Scheme,
+		Path:   c.RedirectPath,
+	}
+
+	return uri.String()
 }
