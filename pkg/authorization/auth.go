@@ -19,6 +19,7 @@ const SuccessMsg = `
 <!DOCTYPE html> <html lang="en"> 
 <head>
 <style>
+box-shadow: 10px 5px 5px red;
 body {
   background-image: url('https://wallpaperaccess.com/full/4834955.jpg');
   background-repeat: no-repeat;
@@ -32,7 +33,7 @@ body {
 <body>
 	<p style="background-image: url('https://wallpaperaccess.com/full/4834955.jpg');"></p>
     <h2><p style="color: white">You have been successfully authenticated and now ready to communicate with the API-Server</br></br>
-	You can close the Browser windows now and get back to the command-line!</p></h2>
+	You can close the Browser window now and get back to the command-line!</p></h2>
 
 </body>
 </html>

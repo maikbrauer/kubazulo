@@ -3,11 +3,12 @@ package token
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/pkg/errors"
-	"github.com/spf13/pflag"
 	"kubazulo/pkg/authorization"
 	"kubazulo/pkg/utils"
 	"log"
+
+	"github.com/pkg/errors"
+	"github.com/spf13/pflag"
 
 	"os"
 	"time"
@@ -39,7 +40,7 @@ type CliFlag struct {
 func kubeoutput(accesstoken string) {
 	kcoutput := Product{
 		Kind:       "ExecCredential",
-		ApiVersion: "client.authentication.k8s.io/v1beta1",
+		ApiVersion: "client.authentication.k8s.io/v1",
 		Spec:       Spec{false},
 		Status:     Status{utils.ConvertUnixToRFC3339(utils.GetCurrentUnixTime()), accesstoken},
 	}
@@ -91,27 +92,27 @@ func GetTokenProcess(flags *pflag.FlagSet) {
 
 	utils.InfoLogger.Println("Application invoked")
 
-	if CheckFlagExistence(flags, "client-id") {
+	if utils.CheckFlagExistence(flags, "client-id") {
 		utils.Cfg_client_id = flags.Lookup("client-id").Value.String()
 	}
 
-	if CheckFlagExistence(flags, "tenant-id") {
+	if utils.CheckFlagExistence(flags, "tenant-id") {
 		utils.Cfg_tenant_id = flags.Lookup("tenant-id").Value.String()
 	}
 
-	if CheckFlagExistence(flags, "force-login") {
+	if utils.CheckFlagExistence(flags, "force-login") {
 		utils.Cfg_force_login = flags.Lookup("force-login").Value.String()
 	}
 
-	if CheckFlagExistence(flags, "loopbackport") {
+	if utils.CheckFlagExistence(flags, "loopbackport") {
 		utils.Cfg_loopbackport = flags.Lookup("loopbackport").Value.String()
 	}
 
-	if CheckFlagExistence(flags, "intermediate") {
+	if utils.CheckFlagExistence(flags, "intermediate") {
 		utils.Cfg_intermediate = flags.Lookup("intermediate").Value.String()
 	}
 
-	if CheckFlagExistence(flags, "api-token-endpoint") {
+	if utils.CheckFlagExistence(flags, "api-token-endpoint") {
 		utils.Cfg_apitokenendpoint = flags.Lookup("api-token-endpoint").Value.String()
 	}
 

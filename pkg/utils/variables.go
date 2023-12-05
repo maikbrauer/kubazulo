@@ -5,16 +5,6 @@ import (
 	"os"
 )
 
-const Usagemsg = "Usage: \n\n\t kubazulo <arguments>" +
-	"Available Commands: --get-token" +
-	"\n\nThe Arguments are:\n\n\t" +
-	"--client-id\t\tAzure Application-ID\n\t" +
-	"--tenant-id\t\tAzure Tenant-ID\n\t" +
-	"--force-login\t\tRe-Usage of Brwoser Session data\n\t" +
-	"--loopbackport\t\tCustomize local callback listener\n\t" +
-	"--intermediate\t\tActivate another Token fetcher Endpoint\n\t" +
-	"--api-token-endpoint\tDefine Endpoint from where it gets Token\n\n"
-
 type AuthorizationConfig struct {
 	Host         string
 	Scheme       string
@@ -62,9 +52,7 @@ type Session struct {
 }
 
 func FillVariables() {
-	// AuthorizationURL is the endpoint used for initial login/auth
 	AuthorizationURL = "https://login.microsoftonline.com/" + Cfg_tenant_id + "/oauth2/v2.0/authorize"
-	// TokenURL is the endpoint for getting access/refresh tokens
 	TokenURL = "https://login.microsoftonline.com/" + Cfg_tenant_id + "/oauth2/v2.0/token"
 }
 

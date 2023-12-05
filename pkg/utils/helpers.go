@@ -6,6 +6,8 @@ import (
 	"net/url"
 	"os"
 	"time"
+
+	"github.com/spf13/pflag"
 )
 
 func GetCurrentUnixTime() int64 {
@@ -40,4 +42,13 @@ func (c AuthorizationConfig) RedirectURL() string {
 	}
 
 	return uri.String()
+}
+
+func CheckFlagExistence(flags *pflag.FlagSet, name string) bool {
+	result, _ := flags.GetString(name)
+	if result != "" {
+		return true
+	} else {
+		return false
+	}
 }
