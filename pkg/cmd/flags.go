@@ -4,11 +4,11 @@ import (
 	"github.com/spf13/pflag"
 )
 
-func Options() Flag_Options {
-	return Flag_Options{}
+func Options() FlagOptions {
+	return FlagOptions{}
 }
 
-type Flag_Options struct {
+type FlagOptions struct {
 	ClientID     string
 	TenantID     string
 	forceLogin   string
@@ -17,7 +17,7 @@ type Flag_Options struct {
 	ApiEndpoint  string
 }
 
-func (o *Flag_Options) AddFlags(fs *pflag.FlagSet) {
+func (o *FlagOptions) AddFlags(fs *pflag.FlagSet) {
 	fs.StringVarP(&o.ClientID, "client-id", "c", "", "Azure Application-ID (Mandatory)")
 	fs.StringVarP(&o.TenantID, "tenant-id", "t", "", "Azure Tenant-ID (Mandatory)")
 	fs.StringVarP(&o.forceLogin, "force-login", "f", "false", "Re-Usage of Browser Session data")

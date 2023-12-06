@@ -50,16 +50,16 @@ func kubeoutput(accesstoken string) {
 
 func createNewToken() {
 	authConfig := utils.DefaultConfig
-	authConfig.ClientID = utils.Cfg_client_id
-	authConfig.RedirectPort = utils.Cfg_loopbackport
+	authConfig.ClientID = utils.CfgClientId
+	authConfig.RedirectPort = utils.CfgLoopbackport
 	//authConfig.ClientSecret = x.ClientSecret
 
 	authCode := authorization.LoginRequest(authConfig)
-	if utils.Cfg_intermediate == "true" {
+	if utils.CfgIntermediate == "true" {
 
-		var data = authorization.Jsondata{
+		var data = authorization.JsonData{
 			AuthCode:    authCode.Value,
-			RedirectURI: "http://localhost:" + utils.Cfg_loopbackport,
+			RedirectURI: "http://localhost:" + utils.CfgLoopbackport,
 		}
 
 		t, err := authorization.GetTokenData(data)
@@ -78,42 +78,33 @@ func createNewToken() {
 	}
 }
 
-func CheckFlagExistence(flags *pflag.FlagSet, name string) bool {
-	result, _ := flags.GetString(name)
-	if result != "" {
-		return true
-	} else {
-		return false
-	}
-}
-
 func GetTokenProcess(flags *pflag.FlagSet) {
 	var _r utils.Session
 
 	utils.InfoLogger.Println("Application invoked")
 
 	if utils.CheckFlagExistence(flags, "client-id") {
-		utils.Cfg_client_id = flags.Lookup("client-id").Value.String()
+		utils.CfgClientId = flags.Lookup("client-id").Value.String()
 	}
 
 	if utils.CheckFlagExistence(flags, "tenant-id") {
-		utils.Cfg_tenant_id = flags.Lookup("tenant-id").Value.String()
+		utils.CfgTenantId = flags.Lookup("tenant-id").Value.String()
 	}
 
 	if utils.CheckFlagExistence(flags, "force-login") {
-		utils.Cfg_force_login = flags.Lookup("force-login").Value.String()
+		utils.CfgForceLogin = flags.Lookup("force-login").Value.String()
 	}
 
 	if utils.CheckFlagExistence(flags, "loopbackport") {
-		utils.Cfg_loopbackport = flags.Lookup("loopbackport").Value.String()
+		utils.CfgLoopbackport = flags.Lookup("loopbackport").Value.String()
 	}
 
 	if utils.CheckFlagExistence(flags, "intermediate") {
-		utils.Cfg_intermediate = flags.Lookup("intermediate").Value.String()
+		utils.CfgIntermediate = flags.Lookup("intermediate").Value.String()
 	}
 
 	if utils.CheckFlagExistence(flags, "api-token-endpoint") {
-		utils.Cfg_apitokenendpoint = flags.Lookup("api-token-endpoint").Value.String()
+		utils.CfgApitokenendpoint = flags.Lookup("api-token-endpoint").Value.String()
 	}
 
 	utils.FillVariables()

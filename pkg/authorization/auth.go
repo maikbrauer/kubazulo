@@ -19,7 +19,6 @@ const SuccessMsg = `
 <!DOCTYPE html> <html lang="en"> 
 <head>
 <style>
-box-shadow: 10px 5px 5px red;
 body {
   background-image: url('https://wallpaperaccess.com/full/4834955.jpg');
   background-repeat: no-repeat;
@@ -34,7 +33,6 @@ body {
 	<p style="background-image: url('https://wallpaperaccess.com/full/4834955.jpg');"></p>
     <h2><p style="color: white">You have been successfully authenticated and now ready to communicate with the API-Server</br></br>
 	You can close the Browser window now and get back to the command-line!</p></h2>
-
 </body>
 </html>
 `
@@ -100,7 +98,6 @@ func startLocalListener(c utils.AuthorizationConfig, token *AuthorizationCode) *
 		}
 
 		fmt.Fprintf(w, "%s", SuccessMsg)
-		//fmt.Fprintf(w, "Auth done, you can close this window")
 	})
 
 	go func() {
@@ -121,12 +118,12 @@ func LoginRequest(c utils.AuthorizationConfig) (token AuthorizationCode) {
 	formVals := url.Values{}
 	formVals.Set("grant_type", "authorization_code")
 	formVals.Set("redirect_uri", c.RedirectURL())
-	formVals.Set("scope", utils.Cfg_client_id+"/.default")
+	formVals.Set("scope", utils.CfgClientId+"/.default")
 	formVals.Set("response_type", "code")
 	formVals.Set("response_mode", "query")
 	formVals.Set("client_id", c.ClientID)
 	formVals.Set("state", "12345")
-	if strings.ToLower(utils.Cfg_force_login) == "true" {
+	if strings.ToLower(utils.CfgForceLogin) == "true" {
 		formVals.Set("prompt", "login")
 	}
 	uri, _ := url.Parse(utils.AuthorizationURL)
@@ -155,7 +152,7 @@ func RenewAccessToken(refreshToken string) (t Tokens, err error) {
 	formVals := url.Values{}
 	formVals.Set("refresh_token", refreshToken)
 	formVals.Set("grant_type", "refresh_token")
-	formVals.Set("client_id", utils.Cfg_client_id)
+	formVals.Set("client_id", utils.CfgClientId)
 	response, err := http.PostForm(utils.TokenURL, formVals)
 
 	if err != nil {

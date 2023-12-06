@@ -25,12 +25,12 @@ var DefaultConfig = AuthorizationConfig{
 }
 
 var (
-	Cfg_client_id        string
-	Cfg_tenant_id        string
-	Cfg_force_login      string
-	Cfg_loopbackport     string
-	Cfg_intermediate     string
-	Cfg_apitokenendpoint string
+	CfgClientId         string
+	CfgTenantId         string
+	CfgForceLogin       string
+	CfgLoopbackport     string
+	CfgIntermediate     string
+	CfgApitokenendpoint string
 )
 
 var (
@@ -52,12 +52,12 @@ type Session struct {
 }
 
 func FillVariables() {
-	AuthorizationURL = "https://login.microsoftonline.com/" + Cfg_tenant_id + "/oauth2/v2.0/authorize"
-	TokenURL = "https://login.microsoftonline.com/" + Cfg_tenant_id + "/oauth2/v2.0/token"
+	AuthorizationURL = "https://login.microsoftonline.com/" + CfgTenantId + "/oauth2/v2.0/authorize"
+	TokenURL = "https://login.microsoftonline.com/" + CfgTenantId + "/oauth2/v2.0/token"
 }
 
 func init() {
-	var logpath string = GetHomeDir() + "/.kube/kubazulo/"
+	var logpath = GetHomeDir() + "/.kube/kubazulo/"
 	CreateDirectory(logpath)
 
 	file, err := os.OpenFile(logpath+"application.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)

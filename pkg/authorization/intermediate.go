@@ -12,18 +12,18 @@ import (
 	"github.com/pkg/errors"
 )
 
-type Jsondata struct {
+type JsonData struct {
 	AuthCode    string `json:"authcode"`
 	RedirectURI string `json:"redirect_uri"`
 }
 
-func GetTokenData(data Jsondata) (t Tokens, err error) {
+func GetTokenData(data JsonData) (t Tokens, err error) {
 	marshalled, err := json.Marshal(data)
 	if err != nil {
 		log.Fatalf("impossible to marshall teacher: %s", err)
 	}
 
-	req, err := http.NewRequest("POST", utils.Cfg_apitokenendpoint, bytes.NewReader(marshalled))
+	req, err := http.NewRequest("POST", utils.CfgApitokenendpoint, bytes.NewReader(marshalled))
 	req.Header.Set("Content-Type", "application/json")
 	client := http.Client{Timeout: 10 * time.Second}
 	response, err := client.Do(req)

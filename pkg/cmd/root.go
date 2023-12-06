@@ -23,7 +23,6 @@ func GetToken() *cobra.Command {
 	}
 
 	cmd.Flags().SortFlags = false
-
 	cmd.MarkFlagsRequiredTogether(DependendFlags()...)
 
 	return cmd
