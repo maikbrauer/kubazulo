@@ -13,8 +13,10 @@ import (
 )
 
 type JsonData struct {
-	AuthCode    string `json:"authcode"`
-	RedirectURI string `json:"redirect_uri"`
+	Code         string `json:"code"`
+	RedirectURI  string `json:"redirect_uri"`
+	RefreshToken string `json:"refresh_token"`
+	GrantType    string `json:"grant_type"`
 }
 
 func GetTokenData(data JsonData) (t Tokens, err error) {

@@ -56,10 +56,10 @@ func createNewToken() {
 
 	authCode := authorization.LoginRequest(authConfig)
 	if utils.CfgIntermediate == "true" {
-
 		var data = authorization.JsonData{
-			AuthCode:    authCode.Value,
+			Code:        authCode.Value,
 			RedirectURI: "http://localhost:" + utils.CfgLoopbackport,
+			GrantType:   "authorization_code",
 		}
 
 		t, err := authorization.GetTokenData(data)

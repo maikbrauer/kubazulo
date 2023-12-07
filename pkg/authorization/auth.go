@@ -149,25 +149,37 @@ func LoginRequest(c utils.AuthorizationConfig) (token AuthorizationCode) {
 }
 
 func RenewAccessToken(refreshToken string) (t Tokens, err error) {
-	formVals := url.Values{}
-	formVals.Set("refresh_token", refreshToken)
-	formVals.Set("grant_type", "refresh_token")
-	formVals.Set("client_id", utils.CfgClientId)
-	response, err := http.PostForm(utils.TokenURL, formVals)
+	if utils.CfgIntermediate == "true" {
 
-	if err != nil {
-		return t, errors.Wrap(err, "error while trying to get tokens")
+		var data = JsonData{}
+		data.GrantType = "refresh_token"
+		data.Code = refreshToken
+
+		t, err := GetTokenData(data)
+		return t, err
+
+	} else {
+
+		formVals := url.Values{}
+		formVals.Set("refresh_token", refreshToken)
+		formVals.Set("grant_type", "refresh_token")
+		formVals.Set("client_id", utils.CfgClientId)
+		response, err := http.PostForm(utils.TokenURL, formVals)
+
+		if err != nil {
+			return t, errors.Wrap(err, "error while trying to get tokens")
+		}
+		body, err := ioutil.ReadAll(response.Body)
+
+		if err != nil {
+			return t, errors.Wrap(err, "error while trying to read token json body")
+		}
+
+		err = json.Unmarshal(body, &t)
+		if err != nil {
+			return t, errors.Wrap(err, "error while trying to parse token json body")
+		}
+
+		return t, err
 	}
-	body, err := ioutil.ReadAll(response.Body)
-
-	if err != nil {
-		return t, errors.Wrap(err, "error while trying to read token json body")
-	}
-
-	err = json.Unmarshal(body, &t)
-	if err != nil {
-		return t, errors.Wrap(err, "error while trying to parse token json body")
-	}
-
-	return
 }
