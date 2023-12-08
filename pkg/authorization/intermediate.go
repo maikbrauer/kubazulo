@@ -1,9 +1,10 @@
-package kubazulo
+package authorization
 
 import (
 	"bytes"
 	"encoding/json"
 	"io/ioutil"
+	"kubazulo/pkg/utils"
 	"log"
 	"net/http"
 	"time"
@@ -11,18 +12,20 @@ import (
 	"github.com/pkg/errors"
 )
 
-type Jsondata struct {
-	AuthCode    string `json:"authcode"`
-	RedirectURI string `json:"redirect_uri"`
+type JsonData struct {
+	Code         string `json:"code"`
+	RedirectURI  string `json:"redirect_uri"`
+	RefreshToken string `json:"refresh_token"`
+	GrantType    string `json:"grant_type"`
 }
 
-func GetTokenData(data Jsondata) (t Tokens, err error) {
+func GetTokenData(data JsonData) (t Tokens, err error) {
 	marshalled, err := json.Marshal(data)
 	if err != nil {
 		log.Fatalf("impossible to marshall teacher: %s", err)
 	}
 
-	req, err := http.NewRequest("POST", Cfg_apitokenendpoint, bytes.NewReader(marshalled))
+	req, err := http.NewRequest("POST", utils.CfgApitokenendpoint, bytes.NewReader(marshalled))
 	req.Header.Set("Content-Type", "application/json")
 	client := http.Client{Timeout: 10 * time.Second}
 	response, err := client.Do(req)

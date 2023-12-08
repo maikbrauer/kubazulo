@@ -40,7 +40,7 @@ jobs:
         with:
           go-version: '1.21'
       - name: Build
-        run: go build -v -o kubazulo
+        run: CGO_ENABLED=0 go build -v -o kubazulo
       - name: Test
         run: go test -v ./...
       - name: create zip
