@@ -39,17 +39,38 @@ jobs:
         uses: actions/setup-go@v4
         with:
           go-version: '1.21'
-      - name: Build
+      - if: matrix.os == 'ubuntu-latest' || matrix.os == 'macOS-latest'
+        name: Build Linux and MacOS
         run: CGO_ENABLED=0 go build -v -o kubazulo
+      - if: matrix.os == 'windows-latest'
+        name: Build Windows
+        run: cmd /C "set CGO_ENABLED=0 && go build -v -o kubazulo"
       - name: Test
         run: go test -v ./...
-      - name: create zip
+      - if: matrix.os == 'windows-latest'
+        name: create zip
         uses: vimtor/action-zip@v1.1
         with:
           files: kubazulo
           dest: kubazulo-${{ matrix.os }}-amd64-${{ github.ref_name }}.zip
-      - name: Upload Release Asset
-        id: upload-release-asset
+      - if: matrix.os == 'ubuntu-latest' || matrix.os == 'macOS-latest'
+        name: create-archive
+        run: tar -czf kubazulo-${{ matrix.os }}-amd64-${{ github.ref_name }}.tar.gz kubazulo
+    
+      - if: matrix.os == 'ubuntu-latest' || matrix.os == 'macOS-latest'
+        name: Upload Release Asset Linux MacOS
+        id: upload-release-asset-linux-macos
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.once.outputs.upload_url }}
+          asset_path: ./kubazulo-${{ matrix.os }}-amd64-${{ github.ref_name }}.tar.gz
+          asset_name: kubazulo-${{ matrix.os }}-amd64-${{ github.ref_name }}.tar.gz
+          asset_content_type: application/x-tgz
+      - if: matrix.os == 'windows-latest'
+        name: Upload Release Asset Windows
+        id: upload-release-asset-windows
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
