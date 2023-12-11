@@ -5,6 +5,8 @@ import (
 	"os"
 )
 
+const msbaseURL = "https://login.microsoftonline.com/"
+
 type AuthorizationConfig struct {
 	Host         string
 	Scheme       string
@@ -37,6 +39,7 @@ var (
 	WarningLogger *log.Logger
 	InfoLogger    *log.Logger
 	ErrorLogger   *log.Logger
+	DebugLogger   *log.Logger
 )
 
 var (
@@ -52,8 +55,8 @@ type Session struct {
 }
 
 func FillVariables() {
-	AuthorizationURL = "https://login.microsoftonline.com/" + CfgTenantId + "/oauth2/v2.0/authorize"
-	TokenURL = "https://login.microsoftonline.com/" + CfgTenantId + "/oauth2/v2.0/token"
+	AuthorizationURL = msbaseURL + CfgTenantId + "/oauth2/v2.0/authorize"
+	TokenURL = msbaseURL + CfgTenantId + "/oauth2/v2.0/token"
 }
 
 func init() {
@@ -68,4 +71,5 @@ func init() {
 	InfoLogger = log.New(file, "INFO: ", log.Ldate|log.Ltime|log.Lshortfile)
 	WarningLogger = log.New(file, "WARNING: ", log.Ldate|log.Ltime|log.Lshortfile)
 	ErrorLogger = log.New(file, "ERROR: ", log.Ldate|log.Ltime|log.Lshortfile)
+	DebugLogger = log.New(file, "DEBUG: ", log.Ldate|log.Ltime|log.Lshortfile)
 }
