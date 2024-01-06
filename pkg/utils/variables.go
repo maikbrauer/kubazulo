@@ -6,7 +6,7 @@ import (
 )
 
 const msBaseURL = "https://login.microsoftonline.com/"
-const version = "0.0.6-beta"
+const version = "0.0.7-beta"
 
 type AuthorizationConfig struct {
 	Host         string
