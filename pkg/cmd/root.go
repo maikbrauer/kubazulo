@@ -14,7 +14,7 @@ func GetToken() *cobra.Command {
 		Long:  `Tries to fetch the Token from AzureAD`,
 		Args:  cobra.MinimumNArgs(0),
 		Run: func(cmd *cobra.Command, args []string) {
-			token.GetTokenProcess(cmd.Flags())
+			token.InvokeTokenProcess(cmd.Flags())
 		},
 	}
 

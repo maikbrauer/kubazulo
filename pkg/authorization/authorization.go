@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/pkg/errors"
 	"io/ioutil"
 	"kubazulo/pkg/utils"
 	"net/http"
@@ -15,7 +14,7 @@ import (
 	"time"
 )
 
-func AuthorizeRequestDeviceFlow(c utils.AuthorizationConfig) (jsondf jsonDeviceFlow) {
+func AuthorizeRequestDeviceFlow(c utils.AuthorizationConfig) (jsonDf jsonDeviceFlow) {
 
 	formVals := url.Values{}
 	formVals.Set("client_id", c.ClientID)
@@ -38,18 +37,16 @@ func AuthorizeRequestDeviceFlow(c utils.AuthorizationConfig) (jsondf jsonDeviceF
 		errors.Wrap(err, "error while trying to read token json body")
 	}
 
-	err = json.Unmarshal(body, &jsondf)
+	err = json.Unmarshal(body, &jsonDf)
 	if err != nil {
 		errors.Wrap(err, "error while trying to parse token json body")
 	}
 
-	fmt.Fprintln(os.Stderr, "Please visit", jsondf.VerificationUri, "and put the following code there:", jsondf.UserCode)
+	fmt.Fprintln(os.Stderr, "Please visit", jsonDf.VerificationUri, "and put the following code there:", jsonDf.UserCode)
 	fmt.Fprintln(os.Stderr, "You have 1 Minute to complete !!")
 
-	//cmd := exec.Command(c.OpenCMD, uri.String())
-	//err := cmd.Start()
 	if err != nil {
-		panic(errors.Wrap(err, "Error while opening deviceflow URL"))
+		panic(errors.Wrap(err, "Error while opening DeviceFlow URL"))
 	}
 
 	return

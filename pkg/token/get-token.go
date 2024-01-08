@@ -115,10 +115,10 @@ func createNewToken() {
 	}
 }
 
-func GetTokenProcess(flags *pflag.FlagSet) {
+func InvokeTokenProcess(flags *pflag.FlagSet) {
 	var _r utils.Session
 
-	utils.InfoLogger.Println("Application invoked")
+	utils.InfoLogger.Println("Application invoked.")
 
 	if utils.CheckFlagExistence(flags, "client-id") {
 		utils.CfgClientId = flags.Lookup("client-id").Value.String()
@@ -151,7 +151,7 @@ func GetTokenProcess(flags *pflag.FlagSet) {
 	utils.FillVariables()
 
 	if _, err := os.Stat(utils.GetHomeDir() + "/.kube/cache/kubazulo/azuredata.json"); errors.Is(err, os.ErrNotExist) {
-		utils.InfoLogger.Println("Cache File does not exist. New AccessToken obtained from Azure-API")
+		utils.InfoLogger.Println("Cache File does not exist. New AccessToken obtained from Azure-API.")
 		if utils.CfgLoginMode != "devicecode" {
 			createNewToken()
 		} else {
@@ -161,19 +161,19 @@ func GetTokenProcess(flags *pflag.FlagSet) {
 		r := utils.ReadSession()
 		_r = r
 		if _r.AccessToken == "" {
-			utils.InfoLogger.Println("Cache File does not contain an Access-Token. New AccessToken obtained from Azure-API")
+			utils.InfoLogger.Println("Cache File does not contain an Access-Token. New AccessToken obtained from Azure-API.")
 			createNewToken()
 		} else if time.Now().Unix() >= _r.ExpirationTimestamp {
-			utils.InfoLogger.Println("Cache File exist but AccessToken is expired. New AccessToken obtained from Azure-API via Refreshtoken")
+			utils.InfoLogger.Println("Cache File exist but AccessToken is expired. New AccessToken obtained from Azure-API via RefreshToken.")
 			t, err := authorization.RenewAccessToken(_r.RefreshToken)
 			if err != nil {
 				log.Fatal(err)
 			}
 			kubeOutput(t.AccessToken)
 			utils.WriteSession(utils.GetExpiryUnixTime(int64(t.Expiry)), utils.GetCurrentUnixTime(), t.AccessToken, t.RefreshToken)
-			utils.InfoLogger.Println("Cache File updated with the latest information from Azure-API")
+			utils.InfoLogger.Println("Cache File updated with the latest information from Azure-API.")
 		} else {
-			utils.InfoLogger.Println("Cache File exist. AccessToken taken from cache file")
+			utils.InfoLogger.Println("Cache File exist. AccessToken taken from cache file.")
 			kubeOutput(r.AccessToken)
 		}
 	}
