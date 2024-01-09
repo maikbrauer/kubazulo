@@ -151,10 +151,12 @@ func InvokeTokenProcess(flags *pflag.FlagSet) {
 	utils.FillVariables()
 
 	if _, err := os.Stat(utils.GetHomeDir() + "/.kube/cache/kubazulo/azuredata.json"); errors.Is(err, os.ErrNotExist) {
-		utils.InfoLogger.Println("Cache File does not exist. New AccessToken obtained from Azure-API.")
+
 		if utils.CfgLoginMode != "devicecode" {
+			utils.InfoLogger.Println("Cache File does not exist. New AccessToken obtained from Azure-API via Interactive Flow Loginmode.")
 			createNewToken()
 		} else {
+			utils.InfoLogger.Println("Cache File does not exist. New AccessToken obtained from Azure-API via Devicecode Flow Loginmode.")
 			createNewTokenDeviceFlow()
 		}
 	} else {
