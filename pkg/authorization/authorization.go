@@ -11,6 +11,7 @@ import (
 	"net/url"
 	"os"
 	"os/exec"
+	"runtime"
 	"strings"
 	"time"
 )
@@ -68,8 +69,7 @@ func AuthorizeRequest(c utils.AuthorizationConfig) (token AuthorizationCode) {
 	uri, _ := url.Parse(utils.AuthorizationURL)
 	uri.RawQuery = formVals.Encode()
 
-	cmd := exec.Command(c.OpenCMD, uri.String())
-	err := cmd.Start()
+	err := open(uri.String())
 	if err != nil {
 		panic(errors.Wrap(err, "Error while opening login URL"))
 
@@ -85,4 +85,23 @@ func AuthorizeRequest(c utils.AuthorizationConfig) (token AuthorizationCode) {
 		}
 	}
 	return
+}
+
+func open(url string) error {
+	var cmd string
+	var args []string
+
+	switch runtime.GOOS {
+	case "windows":
+		cmd = "cmd"
+		args = []string{"/c", "start"}
+		url = strings.ReplaceAll(url, "&", "^&")
+	case "darwin":
+		cmd = "open"
+	default: // "linux", "freebsd", "openbsd", "netbsd"
+		cmd = "xdg-open"
+	}
+
+	args = append(args, url)
+	return exec.Command(cmd, args...).Start()
 }
