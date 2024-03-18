@@ -17,7 +17,7 @@ func CreateDirectory(path string) {
 	}
 }
 
-func WriteSession(Expiry int64, TokenStart int64, _AccessToken string, _RefreshToken string) {
+func WriteSession(_LoginMode string, _Expiry int64, _TokenStart int64, _AccessToken string, _RefreshToken string) {
 	path := "/.kube/cache/kubazulo/"
 	CreateDirectory(GetHomeDir() + path)
 	f, err := os.Create(GetHomeDir() + path + "azuredata.json")
@@ -27,8 +27,9 @@ func WriteSession(Expiry int64, TokenStart int64, _AccessToken string, _RefreshT
 	defer f.Close()
 
 	data := Session{
-		TokenStartTimestamp: TokenStart,
-		ExpirationTimestamp: Expiry,
+		CreationOrigin:      _LoginMode,
+		TokenStartTimestamp: _TokenStart,
+		ExpirationTimestamp: _Expiry,
 		AccessToken:         _AccessToken,
 		RefreshToken:        _RefreshToken,
 	}

@@ -66,7 +66,8 @@ func createNewTokenDeviceFlow() {
 			panic(err)
 		}
 		kubeOutput(t.AccessToken)
-		utils.WriteSession(utils.GetExpiryUnixTime(int64(t.Expiry)), utils.GetCurrentUnixTime(), t.AccessToken, t.RefreshToken)
+
+		utils.WriteSession("devicecode", utils.GetExpiryUnixTime(int64(t.Expiry)), utils.GetCurrentUnixTime(), t.AccessToken, t.RefreshToken)
 	} else {
 		for i := 0; i < 12; i++ {
 			time.Sleep(5 * time.Second)
@@ -77,7 +78,7 @@ func createNewTokenDeviceFlow() {
 			}
 			if t.AccessToken != "" {
 				kubeOutput(t.AccessToken)
-				utils.WriteSession(utils.GetExpiryUnixTime(int64(t.Expiry)), utils.GetCurrentUnixTime(), t.AccessToken, t.RefreshToken)
+				utils.WriteSession("devicecode", utils.GetExpiryUnixTime(int64(t.Expiry)), utils.GetCurrentUnixTime(), t.AccessToken, t.RefreshToken)
 				break
 			}
 		}
@@ -104,14 +105,14 @@ func createNewToken() {
 			panic(err)
 		}
 		kubeOutput(t.AccessToken)
-		utils.WriteSession(utils.GetExpiryUnixTime(int64(t.Expiry)), utils.GetCurrentUnixTime(), t.AccessToken, t.RefreshToken)
+		utils.WriteSession("interactive", utils.GetExpiryUnixTime(int64(t.Expiry)), utils.GetCurrentUnixTime(), t.AccessToken, t.RefreshToken)
 	} else {
 		t, err := authorization.GetTokenAuthCode(authConfig, authCode, "profile openid offline_access")
 		if err != nil {
 			panic(err)
 		}
 		kubeOutput(t.AccessToken)
-		utils.WriteSession(utils.GetExpiryUnixTime(int64(t.Expiry)), utils.GetCurrentUnixTime(), t.AccessToken, t.RefreshToken)
+		utils.WriteSession("interactive", utils.GetExpiryUnixTime(int64(t.Expiry)), utils.GetCurrentUnixTime(), t.AccessToken, t.RefreshToken)
 	}
 }
 
@@ -172,7 +173,7 @@ func InvokeTokenProcess(flags *pflag.FlagSet) {
 				log.Fatal(err)
 			}
 			kubeOutput(t.AccessToken)
-			utils.WriteSession(utils.GetExpiryUnixTime(int64(t.Expiry)), utils.GetCurrentUnixTime(), t.AccessToken, t.RefreshToken)
+			utils.WriteSession("refreshtoken", utils.GetExpiryUnixTime(int64(t.Expiry)), utils.GetCurrentUnixTime(), t.AccessToken, t.RefreshToken)
 			utils.InfoLogger.Println("Cache File updated with the latest information from Azure-API.")
 		} else {
 			utils.InfoLogger.Println("Cache File exist. AccessToken taken from cache file.")

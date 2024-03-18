@@ -29,7 +29,7 @@ func (o *FlagOptions) AddFlags(fs *pflag.FlagSet) {
 }
 
 func RequiredFlags() []string {
-	return []string{"client-id", "tenant-id", "loginmode"}
+	return []string{"client-id", "tenant-id"}
 }
 
 func DependendFlags() []string {

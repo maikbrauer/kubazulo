@@ -63,19 +63,18 @@ kubectl config set-credentials "kubazulo-azuread" \
 ## Command Argument
 
 * get-token
-* version
 
-## Command Flags
+### Command Flags (get-token)
 
-| Parameter            | Description                              | Mandatory | Default     |
-|----------------------|------------------------------------------|:---------:|-------------|
-| --client-id          | Azure Application-ID                     |:heavy_check_mark: | n/a         |
-| --tenant-id          | Azure Tenant-ID                          |:heavy_check_mark: | n/a         |
-| --force-login        | Re-Usage of Browser Session data         |:x: | false       |
-| --loopbackport       | Customize local callback listener        |:x: | 58433       |
-| --loginmode          | Set the Authentication Flow mode         |:x: | interactive |
-| --intermediate       | Activate another Token fetcher Endpoint  |:x: | false       |
-| --api-token-endpoint | Define Endpoint from where it gets Token |:x: | n/a         |
+| Parameter            | Description                              | Mandatory | Choices           | Default |
+|----------------------|------------------------------------------|:---------:|-------------------|--------|
+| --client-id          | Azure Application-ID                     |:heavy_check_mark: | n/a    | n/a    |
+| --tenant-id          | Azure Tenant-ID                          |:heavy_check_mark: | n/a    | n/a    |
+| --force-login        | Re-Usage of Browser Session data         |:x: | true, false       | false     |
+| --loopbackport       | Customize local callback listener        |:x: | n/a               | 58433     |
+| --loginmode          | Set the Authentication Flow mode         |:x: | interactive, devicecode | interactive |
+| --intermediate       | Activate another Token fetcher Endpoint  |:x: | true, false       | false     |
+| --api-token-endpoint | Define Endpoint from where it gets Token |:x: | n/a               | n/a       |
 
 ## Logging
 

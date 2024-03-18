@@ -6,7 +6,7 @@ import (
 )
 
 const msBaseURL = "https://login.microsoftonline.com/"
-const version = "0.0.8-beta"
+const version = "0.0.9-beta"
 
 type AuthorizationConfig struct {
 	Host         string
@@ -52,6 +52,7 @@ var (
 )
 
 type Session struct {
+	CreationOrigin      string `json:"creation_origin"`
 	TokenStartTimestamp int64  `json:"tokenstartTimestamp"`
 	ExpirationTimestamp int64  `json:"expirationTimestamp"`
 	AccessToken         string `json:"access_token"`
