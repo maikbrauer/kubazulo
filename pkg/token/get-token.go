@@ -164,8 +164,13 @@ func InvokeTokenProcess(flags *pflag.FlagSet) {
 		r := utils.ReadSession()
 		_r = r
 		if _r.AccessToken == "" {
-			utils.InfoLogger.Println("Cache File does not contain an Access-Token. New AccessToken obtained from Azure-API.")
-			createNewToken()
+			if utils.CfgLoginMode != "devicecode" {
+				utils.InfoLogger.Println("Cache File exists but doesn't contain an Access-Token. New AccessToken obtained from Azure-API via Interactive Flow Loginmode.")
+				createNewToken()
+			} else {
+				utils.InfoLogger.Println("Cache File exists but doesn't contain an Access-Token. New AccessToken obtained from Azure-API via Devicecode Flow Loginmode.")
+				createNewTokenDeviceFlow()
+			}
 		} else if time.Now().Unix() >= _r.ExpirationTimestamp {
 			utils.InfoLogger.Println("Cache File exist but AccessToken is expired. New AccessToken obtained from Azure-API via RefreshToken.")
 			t, err := authorization.RenewAccessToken(_r.RefreshToken)

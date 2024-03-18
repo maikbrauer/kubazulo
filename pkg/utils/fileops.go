@@ -8,6 +8,11 @@ import (
 	"github.com/pkg/errors"
 )
 
+const (
+	sessionfile = "azuredata.json"
+	cachepath   = "/.kube/cache/kubazulo/"
+)
+
 func CreateDirectory(path string) {
 	if _, err := os.Stat(path); errors.Is(err, os.ErrNotExist) {
 		err := os.MkdirAll(path, os.ModePerm)
@@ -18,9 +23,8 @@ func CreateDirectory(path string) {
 }
 
 func WriteSession(_LoginMode string, _Expiry int64, _TokenStart int64, _AccessToken string, _RefreshToken string) {
-	path := "/.kube/cache/kubazulo/"
-	CreateDirectory(GetHomeDir() + path)
-	f, err := os.Create(GetHomeDir() + path + "azuredata.json")
+	CreateDirectory(GetHomeDir() + cachepath)
+	f, err := os.Create(GetHomeDir() + cachepath + sessionfile)
 	if err != nil {
 		panic(err)
 	}
@@ -43,7 +47,7 @@ func WriteSession(_LoginMode string, _Expiry int64, _TokenStart int64, _AccessTo
 
 func ReadSession() Session {
 	data := Session{}
-	fileContent, err := os.ReadFile(GetHomeDir() + "/.kube/cache/kubazulo/azuredata.json")
+	fileContent, err := os.ReadFile(GetHomeDir() + cachepath + sessionfile)
 	if err != nil {
 		log.Fatal(err)
 	}
