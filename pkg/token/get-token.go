@@ -6,6 +6,7 @@ import (
 	"kubazulo/pkg/authorization"
 	"kubazulo/pkg/utils"
 	"log"
+	"strings"
 
 	"github.com/pkg/errors"
 	"github.com/spf13/pflag"
@@ -61,17 +62,27 @@ func createNewTokenDeviceFlow() {
 			GrantType:   "urn:ietf:params:oauth:grant-type:device_code",
 		}
 
-		t, err := authorization.GetTokenDataApi(data)
-		if err != nil {
-			panic(err)
+		for i := 0; i < 12; i++ {
+			if strings.ToLower(utils.CfgDebugMode) == "true" {
+				utils.DebugLogger.Println("Devicecode retry attempt: ", string(i))
+			}
+			time.Sleep(5 * time.Second)
+			t, err := authorization.GetTokenDataApi(data)
+			if err != nil {
+				panic(err)
+			}
+			if t.AccessToken != "" {
+				kubeOutput(t.AccessToken)
+				utils.WriteSession("devicecode", utils.GetExpiryUnixTime(int64(t.Expiry)), utils.GetCurrentUnixTime(), t.AccessToken, t.RefreshToken)
+				break
+			}
 		}
-		kubeOutput(t.AccessToken)
-
-		utils.WriteSession("devicecode", utils.GetExpiryUnixTime(int64(t.Expiry)), utils.GetCurrentUnixTime(), t.AccessToken, t.RefreshToken)
 	} else {
 		for i := 0; i < 12; i++ {
+			if strings.ToLower(utils.CfgDebugMode) == "true" {
+				utils.DebugLogger.Println("Devicecode retry attempt: ", string(i))
+			}
 			time.Sleep(5 * time.Second)
-
 			t, err := authorization.GetTokensDeviceCode(authConfig, authCode, "profile openid offline_access")
 			if err != nil {
 				panic(err)
@@ -147,6 +158,10 @@ func InvokeTokenProcess(flags *pflag.FlagSet) {
 
 	if utils.CheckFlagExistence(flags, "loginmode") {
 		utils.CfgLoginMode = flags.Lookup("loginmode").Value.String()
+	}
+
+	if utils.CheckFlagExistence(flags, "debug") {
+		utils.CfgDebugMode = flags.Lookup("debug").Value.String()
 	}
 
 	utils.FillVariables()

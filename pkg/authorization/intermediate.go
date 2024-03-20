@@ -36,6 +36,11 @@ func GetTokenDataApi(data JsonData) (t Tokens, err error) {
 	}
 	body, err := ioutil.ReadAll(response.Body)
 
+
+	if response.StatusCode == 400 and strings.ToLower(utils.CfgDebugMode) == "true" {
+		utils.DebugLogger.Println("Token can't be obtained: ", string(body))
+	}
+
 	if err != nil {
 		return t, errors.Wrap(err, "error while trying to read token json body")
 	}

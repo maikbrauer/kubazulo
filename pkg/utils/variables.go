@@ -36,6 +36,7 @@ var (
 	CfgIntermediate     string
 	CfgApitokenendpoint string
 	CfgLoginMode        string
+	CfgDebugMode        string
 )
 
 var (

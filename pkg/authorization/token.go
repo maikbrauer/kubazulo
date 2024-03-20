@@ -45,6 +45,10 @@ func GetTokenAuthCode(c utils.AuthorizationConfig, authCode AuthorizationCode, s
 	}
 	body, err := ioutil.ReadAll(response.Body)
 
+	if response.StatusCode == 400 and strings.ToLower(utils.CfgDebugMode) == "true" {
+		utils.DebugLogger.Println("Token can't be obtained: ", string(body))
+	}
+
 	if err != nil {
 		return t, errors.Wrap(err, "error while trying to read token json body")
 	}
@@ -73,6 +77,9 @@ func GetTokensDeviceCode(c utils.AuthorizationConfig, authCode jsonDeviceFlow, s
 	}
 	body, err := ioutil.ReadAll(response.Body)
 
+	if response.StatusCode == 400 and strings.ToLower(utils.CfgDebugMode) == "true"  {
+		utils.DebugLogger.Println("Token can't be obtained: ", string(body))
+	}
 	if err != nil {
 		return t, errors.Wrap(err, "error while trying to read token json body")
 	}
