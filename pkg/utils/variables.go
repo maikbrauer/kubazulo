@@ -86,7 +86,7 @@ const SuccessMsg = `
 <head>
 <style>
 body {
-  background-image: url('https://wallpaperaccess.com/full/4834955.jpg');
+  background-image: url('https://static.vecteezy.com/system/resources/previews/003/800/676/non_2x/best-internet-concept-of-global-business-globe-glowing-lines-on-technological-background-electronics-wi-fi-rays-symbols-internet-television-mobile-and-satellite-communications-vector.jpg');
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-size: 100% 100%;
@@ -96,7 +96,7 @@ body {
     <title>Azure Platform Authentication Service</title>
 </head>
 <body>
-	<p style="background-image: url('https://wallpaperaccess.com/full/4834955.jpg');"></p>
+	<p style="background-image: url('https://static.vecteezy.com/system/resources/previews/003/800/676/non_2x/best-internet-concept-of-global-business-globe-glowing-lines-on-technological-background-electronics-wi-fi-rays-symbols-internet-television-mobile-and-satellite-communications-vector.jpg');"></p>
     <h2><p style="color: white">You have been successfully authenticated and now ready to communicate with the API-Server</br></br>
 	You can close the Browser window now and get back to the command-line!</p></h2>
 </body>
