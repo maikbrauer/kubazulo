@@ -29,9 +29,9 @@ func startLocalListener(c utils.AuthorizationConfig, token *AuthorizationCode) *
 	go func() {
 		if err := srv.ListenAndServe(); err != nil {
 			//cannot panic, because this probably is an intentional close
-			log.Printf("Httpserver: ListenAndServe() error: %s", err)
+			//log.Printf("Httpserver: ListenAndServe() error: %s", err)
 		}
 	}()
-	
+
 	return srv
 }
