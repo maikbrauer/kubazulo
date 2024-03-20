@@ -16,6 +16,7 @@ type FlagOptions struct {
 	Intermediate string
 	ApiEndpoint  string
 	LoginMode    string
+	DebugMode    string
 }
 
 func (o *FlagOptions) AddFlags(fs *pflag.FlagSet) {
@@ -26,6 +27,8 @@ func (o *FlagOptions) AddFlags(fs *pflag.FlagSet) {
 	fs.StringVarP(&o.Intermediate, "intermediate", "i", "false", "Activate another Token fetcher Endpoint")
 	fs.StringVarP(&o.ApiEndpoint, "api-token-endpoint", "a", "", "External Token Endpoint")
 	fs.StringVarP(&o.LoginMode, "loginmode", "m", "interactive", "Login Method to be used")
+	fs.StringVarP(&o.DebugMode, "debug", "d", "false", "Enabbles more ouput in logs")
+
 }
 
 func RequiredFlags() []string {

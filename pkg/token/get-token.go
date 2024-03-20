@@ -6,6 +6,7 @@ import (
 	"kubazulo/pkg/authorization"
 	"kubazulo/pkg/utils"
 	"log"
+	"strings"
 
 	"github.com/pkg/errors"
 	"github.com/spf13/pflag"
@@ -61,17 +62,27 @@ func createNewTokenDeviceFlow() {
 			GrantType:   "urn:ietf:params:oauth:grant-type:device_code",
 		}
 
-		t, err := authorization.GetTokenDataApi(data)
-		if err != nil {
-			panic(err)
+		for i := 0; i < 12; i++ {
+			if strings.ToLower(utils.CfgDebugMode) == "true" {
+				utils.DebugLogger.Println("Devicecode retry attempt: ", i)
+			}
+			time.Sleep(5 * time.Second)
+			t, err := authorization.GetTokenDataApi(data)
+			if err != nil {
+				panic(err)
+			}
+			if t.AccessToken != "" {
+				kubeOutput(t.AccessToken)
+				utils.WriteSession("devicecode", utils.GetExpiryUnixTime(int64(t.Expiry)), utils.GetCurrentUnixTime(), t.AccessToken, t.RefreshToken)
+				break
+			}
 		}
-		kubeOutput(t.AccessToken)
-
-		utils.WriteSession("devicecode", utils.GetExpiryUnixTime(int64(t.Expiry)), utils.GetCurrentUnixTime(), t.AccessToken, t.RefreshToken)
 	} else {
 		for i := 0; i < 12; i++ {
+			if strings.ToLower(utils.CfgDebugMode) == "true" {
+				utils.DebugLogger.Println("Devicecode retry attempt: ", i)
+			}
 			time.Sleep(5 * time.Second)
-
 			t, err := authorization.GetTokensDeviceCode(authConfig, authCode, "profile openid offline_access")
 			if err != nil {
 				panic(err)
@@ -149,6 +160,10 @@ func InvokeTokenProcess(flags *pflag.FlagSet) {
 		utils.CfgLoginMode = flags.Lookup("loginmode").Value.String()
 	}
 
+	if utils.CheckFlagExistence(flags, "debug") {
+		utils.CfgDebugMode = flags.Lookup("debug").Value.String()
+	}
+
 	utils.FillVariables()
 
 	if _, err := os.Stat(utils.GetHomeDir() + "/.kube/cache/kubazulo/azuredata.json"); errors.Is(err, os.ErrNotExist) {
@@ -164,8 +179,13 @@ func InvokeTokenProcess(flags *pflag.FlagSet) {
 		r := utils.ReadSession()
 		_r = r
 		if _r.AccessToken == "" {
-			utils.InfoLogger.Println("Cache File does not contain an Access-Token. New AccessToken obtained from Azure-API.")
-			createNewToken()
+			if utils.CfgLoginMode != "devicecode" {
+				utils.InfoLogger.Println("Cache File exists but doesn't contain an Access-Token. New AccessToken obtained from Azure-API via Interactive Flow Loginmode.")
+				createNewToken()
+			} else {
+				utils.InfoLogger.Println("Cache File exists but doesn't contain an Access-Token. New AccessToken obtained from Azure-API via Devicecode Flow Loginmode.")
+				createNewTokenDeviceFlow()
+			}
 		} else if time.Now().Unix() >= _r.ExpirationTimestamp {
 			utils.InfoLogger.Println("Cache File exist but AccessToken is expired. New AccessToken obtained from Azure-API via RefreshToken.")
 			t, err := authorization.RenewAccessToken(_r.RefreshToken)

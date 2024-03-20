@@ -7,6 +7,7 @@ import (
 	"kubazulo/pkg/utils"
 	"log"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/pkg/errors"
@@ -35,6 +36,10 @@ func GetTokenDataApi(data JsonData) (t Tokens, err error) {
 		return t, errors.Wrap(err, "error while trying to get tokens")
 	}
 	body, err := ioutil.ReadAll(response.Body)
+
+	if response.StatusCode == 400 && strings.ToLower(utils.CfgDebugMode) == "true" {
+		utils.DebugLogger.Println("Token can't be obtained: ", string(body))
+	}
 
 	if err != nil {
 		return t, errors.Wrap(err, "error while trying to read token json body")
