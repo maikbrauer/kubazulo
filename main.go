@@ -4,6 +4,7 @@ import (
 	"kubazulo/pkg/cmd"
 	"kubazulo/pkg/utils"
 	"os"
+	"runtime"
 
 	"github.com/spf13/cobra"
 )
@@ -15,7 +16,7 @@ func main() {
 		Long: `Kubeconfig Authentication Helper for Kubernetes API-Server in cunjunction with kubectl
 Kubazulo is a client-go credential (exec) plugin implementing Azure authentication. 
 It plugs in seemless into the process of communicating to the kubernetes API-Server.`,
-		Version: utils.PrintAppVersion(),
+		Version: utils.PrintAppVersion() + "\ngo-runtime: " + runtime.Version(),
 	}
 	rootCmd.CompletionOptions.DisableDefaultCmd = true
 	rootCmd.AddCommand(cmd.GetToken())

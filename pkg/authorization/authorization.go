@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/pkg/errors"
-	"io/ioutil"
+	"io"
 	"kubazulo/pkg/utils"
 	"net/http"
 	"net/url"
@@ -33,7 +33,7 @@ func AuthorizeRequestDeviceFlow(c utils.AuthorizationConfig) (jsonDf jsonDeviceF
 	if err != nil {
 		errors.Wrap(err, "error while trying to get tokens")
 	}
-	body, err := ioutil.ReadAll(response.Body)
+	body, err := io.ReadAll(response.Body)
 
 	if err != nil {
 		errors.Wrap(err, "error while trying to read token json body")
@@ -45,7 +45,7 @@ func AuthorizeRequestDeviceFlow(c utils.AuthorizationConfig) (jsonDf jsonDeviceF
 	}
 
 	fmt.Fprintln(os.Stderr, "Please visit", jsonDf.VerificationUri, "and put the following code there:", jsonDf.UserCode)
-	fmt.Fprintln(os.Stderr, "You have 1 Minute to complete !!")
+	fmt.Fprintln(os.Stderr, "You have 3 Minutes to complete !!")
 
 	if err != nil {
 		panic(errors.Wrap(err, "Error while opening DeviceFlow URL"))

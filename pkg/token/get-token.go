@@ -62,7 +62,7 @@ func createNewTokenDeviceFlow() {
 			GrantType:   "urn:ietf:params:oauth:grant-type:device_code",
 		}
 
-		for i := 0; i < 12; i++ {
+		for i := 0; i < 36; i++ {
 			if strings.ToLower(utils.CfgDebugMode) == "true" {
 				utils.DebugLogger.Println("Devicecode retry attempt: ", i)
 			}
@@ -78,7 +78,7 @@ func createNewTokenDeviceFlow() {
 			}
 		}
 	} else {
-		for i := 0; i < 12; i++ {
+		for i := 0; i < 36; i++ {
 			if strings.ToLower(utils.CfgDebugMode) == "true" {
 				utils.DebugLogger.Println("Devicecode retry attempt: ", i)
 			}
@@ -94,7 +94,6 @@ func createNewTokenDeviceFlow() {
 			}
 		}
 	}
-
 }
 
 func createNewToken() {

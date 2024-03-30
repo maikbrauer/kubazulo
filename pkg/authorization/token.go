@@ -3,7 +3,7 @@ package authorization
 import (
 	"encoding/json"
 	"github.com/pkg/errors"
-	"io/ioutil"
+	"io"
 	"kubazulo/pkg/utils"
 	"net/http"
 	"net/url"
@@ -44,7 +44,7 @@ func GetTokenAuthCode(c utils.AuthorizationConfig, authCode AuthorizationCode, s
 	if err != nil {
 		return t, errors.Wrap(err, "error while trying to get tokens")
 	}
-	body, err := ioutil.ReadAll(response.Body)
+	body, err := io.ReadAll(response.Body)
 
 	if response.StatusCode == 400 && strings.ToLower(utils.CfgDebugMode) == "true" {
 		utils.DebugLogger.Println("Token can't be obtained: ", string(body))
@@ -76,7 +76,7 @@ func GetTokensDeviceCode(c utils.AuthorizationConfig, authCode jsonDeviceFlow, s
 	if err != nil {
 		return t, errors.Wrap(err, "error while trying to get tokens")
 	}
-	body, err := ioutil.ReadAll(response.Body)
+	body, err := io.ReadAll(response.Body)
 
 	if response.StatusCode == 400 && strings.ToLower(utils.CfgDebugMode) == "true" {
 		utils.DebugLogger.Println("Token can't be obtained: ", string(body))
@@ -111,7 +111,7 @@ func RenewAccessToken(refreshToken string) (t Tokens, err error) {
 		if err != nil {
 			return t, errors.Wrap(err, "error while trying to get tokens")
 		}
-		body, err := ioutil.ReadAll(response.Body)
+		body, err := io.ReadAll(response.Body)
 
 		if err != nil {
 			return t, errors.Wrap(err, "error while trying to read token json body")
