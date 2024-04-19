@@ -148,7 +148,7 @@ func InvokeTokenProcess(flags *pflag.FlagSet) {
 	}
 
 	if utils.CheckFlagExistence(flags, "intermediate") {
-		utils.CfgIntermediate = flags.Lookup("intermediate").Value.String()
+		utils.CfgIntermediate = strings.ToLower(flags.Lookup("intermediate").Value.String())
 	}
 
 	if utils.CheckFlagExistence(flags, "api-token-endpoint") {
@@ -156,11 +156,11 @@ func InvokeTokenProcess(flags *pflag.FlagSet) {
 	}
 
 	if utils.CheckFlagExistence(flags, "loginmode") {
-		utils.CfgLoginMode = flags.Lookup("loginmode").Value.String()
+		utils.CfgLoginMode = strings.ToLower(flags.Lookup("loginmode").Value.String())
 	}
 
 	if utils.CheckFlagExistence(flags, "debug") {
-		utils.CfgDebugMode = flags.Lookup("debug").Value.String()
+		utils.CfgDebugMode = strings.ToLower(flags.Lookup("debug").Value.String())
 	}
 
 	utils.FillVariables()
