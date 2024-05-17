@@ -29,6 +29,7 @@ func GetTokenDataApi(data JsonData) (t Tokens, err error) {
 
 	req, err := http.NewRequest("POST", utils.CfgApitokenendpoint, bytes.NewReader(marshalled))
 	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("User-Agent", "kubazulo-cli_"+utils.PrintAppVersion())
 	client := http.Client{Timeout: 10 * time.Second}
 	response, err := client.Do(req)
 
