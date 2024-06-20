@@ -72,7 +72,7 @@ func init() {
 
 	file, err := os.OpenFile(logpath+"application.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal(err, " - Please check if folder with name \"kubazulo\" name has been created properly and the name is not already in use!")
 	}
 
 	InfoLogger = log.New(file, "INFO: ", log.Ldate|log.Ltime|log.Lshortfile)

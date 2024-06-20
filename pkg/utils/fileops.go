@@ -17,7 +17,7 @@ func CreateDirectory(path string) {
 	if _, err := os.Stat(path); errors.Is(err, os.ErrNotExist) {
 		err := os.MkdirAll(path, os.ModePerm)
 		if err != nil {
-			log.Println(err)
+			log.Println(err, " - Please check if the foldername is already existing or used by a file!")
 		}
 	}
 }
@@ -49,7 +49,7 @@ func ReadSession() Session {
 	data := Session{}
 	fileContent, err := os.ReadFile(GetHomeDir() + cachepath + sessionfile)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal(err, " - Please check if folder with name \"kubazulo\" name has been created properly and the name is not already in use!")
 	}
 	json.Unmarshal([]byte(fileContent), &data)
 	return data
