@@ -38,6 +38,11 @@ func GetTokenDataApi(data JsonData) (t Tokens, err error) {
 	}
 	body, err := io.ReadAll(response.Body)
 
+	if strings.ToLower(utils.CfgDebugMode) == "true" {
+		utils.DebugLogger.Println("API-GW Endpoint:", utils.CfgApitokenendpoint)
+		utils.DebugLogger.Println("API-GW (Tocrocon)-Version:", response.Header.Get("Tocrocon-Version"))
+	}
+
 	if response.StatusCode == 400 && strings.ToLower(utils.CfgDebugMode) == "true" {
 		utils.DebugLogger.Println("Token can't be obtained: ", string(body))
 	}

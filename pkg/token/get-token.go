@@ -64,7 +64,7 @@ func createNewTokenDeviceFlow() {
 
 		for i := 0; i < 36; i++ {
 			if strings.ToLower(utils.CfgDebugMode) == "true" {
-				utils.DebugLogger.Println("Devicecode retry attempt: ", i)
+				utils.DebugLogger.Println("Devicecode retry attempt:", i)
 			}
 			time.Sleep(5 * time.Second)
 			t, err := authorization.GetTokenDataApi(data)
@@ -80,7 +80,7 @@ func createNewTokenDeviceFlow() {
 	} else {
 		for i := 0; i < 36; i++ {
 			if strings.ToLower(utils.CfgDebugMode) == "true" {
-				utils.DebugLogger.Println("Devicecode retry attempt: ", i)
+				utils.DebugLogger.Println("Devicecode retry attempt:", i)
 			}
 			time.Sleep(5 * time.Second)
 			t, err := authorization.GetTokensDeviceCode(authConfig, authCode, "profile openid offline_access")
