@@ -74,7 +74,7 @@ jobs:
         if: matrix.os == 'windows-latest' && matrix.arch == 'amd64'
         run: |
           cmd /C "set CGO_ENABLED=0 && go build -v -o kubazulo"
-          powershell Compress-Archive -Path kubazulo -DestinationPath kubazulo-windows-x86_64-${{ github.ref_name }}.zip
+          powershell Compress-Archive -Path kubazulo -DestinationPath kubazulo-windows-amd64-${{ github.ref_name }}.zip
 
       - name: Test
         run: go test -v ./...
