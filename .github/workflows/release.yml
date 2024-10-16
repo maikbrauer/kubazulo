@@ -66,7 +66,7 @@ jobs:
             tar -czvf kubazulo-linux-arm7-${{ github.ref_name }}.tar.gz kubazulo
           fi
 
-      - if: matrix.os == 'macos-latest' || matrix.os == 'macos-13'
+      - if: matrix.os == 'macos-latest' && matrix.arch == 'arm64' || matrix.os == 'macos-13' && matrix.arch == 'amd64'
         name: Build Linux and MacOS arm64/amd64
         run: CGO_ENABLED=0 go build -v -o kubazulo
       
@@ -79,11 +79,11 @@ jobs:
       - name: Test
         run: go test -v ./...
       
-      - if: matrix.os == 'macos-13'
+      - if: matrix.os == 'macos-13' && matrix.arch == 'amd64'
         name: create-archive for macos amd64
         run: tar -czf kubazulo-macos-amd64-${{ github.ref_name }}.tar.gz kubazulo
       
-      - if: matrix.os == 'macos-latest'
+      - if: matrix.os == 'macos-latest' && matrix.arch == 'arm64'
         name: create-archive for arm64
         run: tar -czf kubazulo-macos-arm64-${{ github.ref_name }}.tar.gz kubazulo
       
@@ -123,7 +123,7 @@ jobs:
           asset_name: kubazulo-linux-arm7-${{ github.ref_name }}.tar.gz
           asset_content_type: application/x-tgz
 
-      - if: matrix.os == 'macos-13'
+      - if: matrix.os == 'macos-13' && matrix.arch == 'amd64'
         name: Upload Release Asset MacOS amd64
         id: upload-release-asset-macos-amd64
         uses: actions/upload-release-asset@v1
@@ -135,7 +135,7 @@ jobs:
           asset_name: kubazulo-macos-amd64-${{ github.ref_name }}.tar.gz
           asset_content_type: application/x-tgz   
       
-      - if: matrix.os == 'macos-latest'
+      - if: matrix.os == 'macos-latest' && matrix.arch == 'arm64'
         name: Upload Release Asset MacOS arm64
         id: upload-release-asset-macos-arm64
         uses: actions/upload-release-asset@v1
@@ -147,7 +147,7 @@ jobs:
           asset_name: kubazulo-macos-arm64-${{ github.ref_name }}.tar.gz
           asset_content_type: application/x-tgz  
       
-      - if: matrix.os == 'windows-latest'
+      - if: matrix.os == 'windows-latest' && matrix.arch == 'amd64'
         name: Upload Release Asset Windows
         id: upload-release-asset-windows
         uses: actions/upload-release-asset@v1
@@ -159,7 +159,7 @@ jobs:
           asset_name: kubazulo-windows-amd64-${{ github.ref_name }}.zip
           asset_content_type: application/zip
       
-      - if: matrix.os == 'windows-latest'
+      - if: matrix.os == 'windows-latest' && matrix.arch == 'amd64'
         name: Upload Release Asset only executable for winget
         id: upload-release-asset_windows_exe-amd64
         uses: actions/upload-release-asset@v1
