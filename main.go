@@ -12,10 +12,9 @@ import (
 func main() {
 	var rootCmd = &cobra.Command{
 		Use:   "kubazulo",
-		Short: "Kubeconfig Authentication Helper for Kubernetes API-Server in cunjunction with kubectl",
-		Long: `Kubeconfig Authentication Helper for Kubernetes API-Server in cunjunction with kubectl
-Kubazulo is a client-go credential (exec) plugin implementing Azure authentication. 
-It plugs in seemless into the process of communicating to the kubernetes API-Server.`,
+		Short: "Kubeconfig Authentication Helper for Kubernetes API-Server with kubectl",
+		Long: `Kubazulo is a client-go credential (exec) plugin that implements Azure authentication. 
+It seamlessly integrates into the process of communicating with the Kubernetes API-Server.`,
 		Version: utils.PrintAppVersion() + "\ngo-runtime: " + runtime.Version(),
 	}
 	rootCmd.CompletionOptions.DisableDefaultCmd = true

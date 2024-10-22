@@ -17,7 +17,7 @@ func CreateDirectory(path string) {
 	if _, err := os.Stat(path); errors.Is(err, os.ErrNotExist) {
 		err := os.MkdirAll(path, os.ModePerm)
 		if err != nil {
-			log.Println(err, " - Please check if the foldername is already existing or used by a file!")
+			log.Println(err, " - Please verify if the folder name already exists or is being used by a file!")
 		}
 	}
 }
